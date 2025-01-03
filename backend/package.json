@@ -1,0 +1,20 @@
+{
+  "name": "jobsmart",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config  src/index.js"
+  },
+  "author": "Astitva",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prettier": "^3.4.2"
+  }
+}
