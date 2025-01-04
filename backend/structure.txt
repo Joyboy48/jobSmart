@@ -1,0 +1,42 @@
+JobSmart/
+├── Readme.md
+├── package.json
+├── .env.sample
+├── .gitignore
+├── .prettierrc
+├── .prettierignore
+├── public/
+│   └── temp/
+│       └── .gitkeep
+└── src/
+    ├── app.js
+    ├── constants.js
+    ├── index.js
+    ├── controllers/
+    │   ├── auth.controller.js
+    │   ├── job.controller.js
+    │   ├── application.controller.js
+    │   ├── user.controller.js
+    │   └── dashboard.controller.js
+    ├── db/
+    │   └── index.js
+    ├── middlewares/
+    │   ├── auth.middleware.js
+    │   ├── error.middleware.js
+    │   └── validation.middleware.js
+    ├── models/
+    │   ├── user.model.js
+    │   ├── job.model.js
+    │   ├── application.model.js
+    │   └── skill.model.js
+    ├── routes/
+    │   ├── auth.routes.js
+    │   ├── job.routes.js
+    │   ├── application.routes.js
+    │   ├── user.routes.js
+    │   └── dashboard.routes.js
+    ├── utils/
+    │   ├── ApiError.js
+    │   ├── ApiResponse.js
+    │   ├── asyncHandler.js
+    │   └── logger.js
