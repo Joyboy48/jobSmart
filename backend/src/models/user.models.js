@@ -41,6 +41,13 @@ const userSchema = new Schema(
             enum: ['user', 'admin'],
             default: 'user',
           },
+        profileImage:{
+            type:String,
+            required:true
+        },
+        refreshToken:{
+            type:String
+        }
 
     },{timestamps:true}
 )
