@@ -2,7 +2,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 import {apiError} from "../utils/apiError.js"
 import {User} from "../models/user.models.js"
 import {apiResponse} from "../utils/apiResponse.js"
-import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import {deleteFromCloudinary, uploadOnCloudinary} from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
 
 const generateAccessAndRefreshToken = async(userId)=>{
@@ -301,6 +301,9 @@ const updateProfileImage = asyncHandler(async(req,res)=>{
         throw new apiError(400,"error while uploading image on cloudinary")
     }
 
+    
+    
+
     const user = await User.findByIdAndUpdate(req.user?._id,
         {
             $set:{
@@ -309,6 +312,10 @@ const updateProfileImage = asyncHandler(async(req,res)=>{
             new:true,
         }
     ).select("-password")
+
+    // //delete old image from cloudinary
+    // const publicId = user?.profileImage.publicId
+    // await deleteFromCloudinary(publicId)
 
     return res
     .status(200)
