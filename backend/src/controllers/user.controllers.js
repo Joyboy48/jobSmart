@@ -262,5 +262,30 @@ const getCurrentUser = asyncHandler(async(req,res)=>{
     ))
 })
 
+const updateAccountDetails = asyncHandler(async(req,res)=>{
+
+    const {name,email} = req.body
+
+    if(!(name || email)){
+        throw new apiError(400,"please provide the data")
+    }
+
+    const user = await User.findByIdAndUpdate(req.user?._id,
+        {
+            $set:{
+                name,
+                email
+            },
+            new:true
+        }
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new apiResponse(200,user,"account details update successfully")
+    )
+})
+
 export {registerUser,loginUser,logoutUser,refreshingAccessToken,
-    changeCurrentPassword,getCurrentUser}
+    changeCurrentPassword,getCurrentUser,updateAccountDetails}
