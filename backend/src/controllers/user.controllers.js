@@ -287,5 +287,35 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
     )
 })
 
+const updateProfileImage = asyncHandler(async(req,res)=>{
+
+    const profileImageLocalPath = req.file?.path
+
+    if(!profileImageLocalPath){
+        throw new apiError(400,"please provide the image")
+    }
+
+    const profileImage = await uploadOnCloudinary(profileImageLocalPath)
+
+    if(!profileImage){
+        throw new apiError(400,"error while uploading image on cloudinary")
+    }
+
+    const user = await User.findByIdAndUpdate(req.user?._id,
+        {
+            $set:{
+                profileImage:profileImage.url
+            },
+            new:true,
+        }
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(new apiResponse(200,user,"image updated successfull"))
+})
+
 export {registerUser,loginUser,logoutUser,refreshingAccessToken,
-    changeCurrentPassword,getCurrentUser,updateAccountDetails}
+    changeCurrentPassword,getCurrentUser,updateAccountDetails,
+    updateProfileImage
+}
