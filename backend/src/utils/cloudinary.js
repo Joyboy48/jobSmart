@@ -1,5 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { extractPublicId } from 'cloudinary-build-url';
 import fs from "fs"
+
 
  // Configuration
  cloudinary.config({ 
@@ -8,10 +10,11 @@ import fs from "fs"
     api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-const uploadOnCloudinary = async (localFilePath)=>{
+const uploadOnCloudinary = async (localFilePath,path)=>{
     try {
         if(!localFilePath) return null;
         const response = await cloudinary.uploader.upload(localFilePath,{
+            folder:path,
             resource_type:"auto"
         })
 
@@ -25,12 +28,30 @@ const uploadOnCloudinary = async (localFilePath)=>{
     }
 }
 
-const deleteFromCloudinary = async (publicId)=>{
+
+const deleteFromCloudinary = async (cloudinaryUrl, path) => {
     try {
-        await cloudinary.v2.uploader.destroy(publicId);
+      if (!cloudinaryUrl) {
+        throw new Error('Cloudinary URL is required');
+      }
+  
+      const publicId = extractPublicId(cloudinaryUrl)
+      console.log(publicId);
+      
+  
+      const response = await cloudinary.uploader.destroy(publicId);
+      
+      if (response.result !== 'ok') {
+        throw new Error(`Failed to delete: ${response.result}`);
+      }
+  
+      console.log('Successfully deleted:', publicId);
+      return response;
+  
     } catch (error) {
-        console.error("Error deleting from Cloudinary:", error);
+      console.error('Error deleting from Cloudinary:', error.message);
+      throw error;
     }
-}
+  };
 
 export {uploadOnCloudinary,deleteFromCloudinary}

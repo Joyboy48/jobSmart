@@ -2,7 +2,8 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 import {apiError} from "../utils/apiError.js"
 import {User} from "../models/user.models.js"
 import {apiResponse} from "../utils/apiResponse.js"
-import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import {deleteFromCloudinary, uploadOnCloudinary} from "../utils/cloudinary.js"
+import jwt from "jsonwebtoken"
 
 const generateAccessAndRefreshToken = async(userId)=>{
     try {
@@ -52,7 +53,7 @@ const registerUser = asyncHandler(async(req,res)=>{
     }
 
     //upload on cloudinary
-    const profileImage = await uploadOnCloudinary(profileImageLocalPath)
+    const profileImage = await uploadOnCloudinary(profileImageLocalPath,"jobSmart")
 
     //check
     if(!profileImage){ 
@@ -294,10 +295,26 @@ const updateProfileImage = asyncHandler(async(req,res)=>{
         throw new apiError(400,"please provide the image")
     }
 
-    const profileImage = await uploadOnCloudinary(profileImageLocalPath)
+    const profileImage = await uploadOnCloudinary(profileImageLocalPath,"jobSmart")
 
     if(!profileImage){
         throw new apiError(400,"error while uploading image on cloudinary")
+    }
+
+    //delete old file
+    const oldLocalFilePath = req.user?.profileImage
+
+    console.log(oldLocalFilePath);
+    
+
+    if(!oldLocalFilePath){
+        throw new apiError(400,"old file not found")
+    }
+
+    const deleteOldImage = await deleteFromCloudinary(oldLocalFilePath,"jobSmart")
+
+    if(!deleteOldImage){
+        throw new apiError(400,"error while deleting file from cloudinary")
     }
 
     const user = await User.findByIdAndUpdate(req.user?._id,
