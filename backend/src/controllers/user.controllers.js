@@ -4,6 +4,25 @@ import {User} from "../models/user.models.js"
 import {apiResponse} from "../utils/apiResponse.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
+const generateAccessAndRefreshToken = async(userId)=>{
+    try {
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave:false})
+
+       //console.log("Generated Tokens:", {accessToken, refreshToken}); 
+
+        return {accessToken, refreshToken}
+
+    } catch (error) {
+        //console.error("Error generating tokens:", error); 
+        throw new apiError(500,"Something went wrong while generating tokens")
+    }
+}
+
 const registerUser = asyncHandler(async(req,res)=>{
 
     //input
@@ -36,7 +55,7 @@ const registerUser = asyncHandler(async(req,res)=>{
     const profileImage = await uploadOnCloudinary(profileImageLocalPath)
 
     //check
-    if(!profileImage){
+    if(!profileImage){ 
         throw new apiError(400,"profileImage is required")
     }
 
