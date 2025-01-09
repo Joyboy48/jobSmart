@@ -35,10 +35,11 @@ const deleteFromCloudinary = async (cloudinaryUrl, path) => {
         throw new Error('Cloudinary URL is required');
       }
   
+      ///get publicId
       const publicId = extractPublicId(cloudinaryUrl)
       console.log(publicId);
       
-  
+  //destroy
       const response = await cloudinary.uploader.destroy(publicId);
       
       if (response.result !== 'ok') {
