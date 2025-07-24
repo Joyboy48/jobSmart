@@ -1,4 +1,4 @@
 class ApiConstants{
-  static const String secretAPIKey = "";
+  static const String secretAPIKey = "*****";
 
 }
