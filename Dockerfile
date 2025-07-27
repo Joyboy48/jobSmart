@@ -29,7 +29,7 @@ COPY backend/public ./public
 COPY backend/eng.traineddata ./eng.traineddata
 
 # Copy .env if present (for local dev; override with real secrets in prod)
-COPY backend/.env .env
+# COPY backend/.env .env
 
 EXPOSE 4000
 
